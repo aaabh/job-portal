@@ -1,0 +1,6 @@
+
+
+
+
+mongodb+srv://nimebi4710:soHfMTUYzjpwhXsx@cluster0.zr7kf.mongodb.net/
+mongodb+srv://nimebi4710:<db_password>@cluster0.zr7kf.mongodb.net/
