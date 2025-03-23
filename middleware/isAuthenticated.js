@@ -1,22 +1,23 @@
 import jwt from "jsonwebtoken";
 
 // Define a middleware function to verify JWT tokens
-const authenticateToken =async (req, res, next) => {
+const authenticateToken = (req, res, next) => {
   try {
-    const token = req.cookie.token;
+    const token = req.cookies.token;
     if(!token) {
       return res
       .status(401)
       .json({
          message: "Token is not provided",
-         sucess: true,
+         sucess: false,
        });
-       
+
+
     }
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const decoded =  jwt.verify(token, process.env.JWT_SECRET);
     if(!decoded){
       return (
-        res.status(401).json({message: "Invalid token"}),(success = false)
+        res.status(401).json({message: "Invalid token decoded"}),(success = false)
       );
     }
     req.id = decoded.userId;
@@ -25,7 +26,7 @@ const authenticateToken =async (req, res, next) => {
   }
   catch (error){
     res.status(401).json({
-      message: "Invalid token"
+      message: "Invalid token" + error.message
     });
   }
 }

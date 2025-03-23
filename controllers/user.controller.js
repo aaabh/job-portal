@@ -12,7 +12,7 @@ export const register = async (req, res) => {
         success: false,
       });
     }
-    const user =  User.findOne({ email});
+    const user = await User.findOne({ email});
     if(user){
       return res.status(404).json({
         message: 'Email already exists',
@@ -28,7 +28,9 @@ export const register = async (req, res) => {
       password: hashedPassword, 
       role
     });
-    
+    //save user to database
+    await newUser .save();
+
     return res.status(200).json({
       message: `Account created successfully ${fullname}`,
       success: true,
@@ -92,7 +94,7 @@ export const login = async (req, res) => {
     .cookie("token",token, {
       maxAge: 1 * 24 * 60 * 60 * 60 * 1000,
       httpOnly: true,
-      sameStatus: strict,  
+      sameStatus: "Strict",  
     } ).json({
       message: `Welcome back ${user.fullname}`,
       user,
@@ -125,58 +127,134 @@ export const logout = (req, res) => {
     });
   }
 }
+// export const updateProfile = async (req, res) => {
+//   try{
+//     const {fullname, email, phoneNumber, bio, skills} = req.body;
+//     const file = req.files;
+// //cloudinary upload
+     
+//     let skillsArray; 
+//     if(skills){
+//        skillsArray = skills.split(',');
+//     }
+//     const userId = req.id;// middleware aythentication 
+//     let user = await User.findById(userId);
+//     if(!user){
+//       return res.status(404).json({
+//         message: "User not found",
+//         success: false,
+//       });
+      
+//     } 
+//     //update database profile 
+//     if(fullname){
+//       user.fullname = fullname;
+//     }
+//     if(email){
+//       user.email = email;
+//     }
+//     if(phoneNumber){
+//       user.phoneNumber = phoneNumber;
+//     }
+//     if(bio){
+//       user.profile.bio = bio;
+//     }
+//     if(skills){
+//       user.profile.skills = skillsArray;
+//     }
+    
+
+
+
+
+//     //resume
+//     await user.save();
+
+//     const updatedUser = {
+//       _id: user._id,
+//       fullname: user.fullname,
+//       email: user.email,
+//       phoneNumber: user.phoneNumber,
+//       role: user.role,
+//       profile:  user.profile,
+//     }
+//     return res.status(200)
+//     .json({
+//       message: "Profile updated successfully",
+//       user: updatedUser,
+//       success: true,
+//      });
+//   }
+//   catch(error){
+//     console.log(error);
+//     res.status(500).json({
+//       message: "Server Error Updating Profile",
+//       success: false,
+//     })
+    
+//   }
+// }
+
+
+
 export const updateProfile = async (req, res) => {
   try{
-    const {fullname, email, phoneNumber, bio, skills} = req.body;
-    const file = req.files;
-    if (!fullname || !email || !phoneNumber || !bio || !skills){
-      return res.status(404)
-        .json({
-          message: "Missing required fields",
-          success: false,
-        });
+    const { fullname, email, phoneNumber, bio, skills } = req.body;
+    const file = req.file;
+    if(!fullname || !email || !phoneNumber || !bio || !skills){
+      return res.status(404).json({
+        message : "Missing required fields",
+        success : false,
+      });
     }
 
-//cloudinary upload
 
-    const skillsArray = skills.split(',');
-    const userId = req.id;// middleware aythentication 
+    //cloudary upload
+
+
+    const skrillArray = skills.split(',');
+    const userId = req.id; //middleware authentication
     let user = await User.findById(userId);
     if(!user){
       return res.status(404).json({
         message: "User not found",
         success: false,
       });
-    } 
+    }
+
     user.fullname = fullname;
     user.email = email;
     user.phoneNumber = phoneNumber;
     user.bio = bio;
-    user.skills = skillsArray;
+    user.skills = skrillArray;
+
     //resume
+     
     await user.save();
+
     user = {
       _id: user._id,
       fullname: user.fullname,
       email: user.email,
       phoneNumber: user.phoneNumber,
       role: user.role,
-      profile:  user.profile,
-    }
-    return res.status(200)
-    .json({
+      profile: user.profile,
+    };
+
+    return res.status(200).json({
       message: "Profile updated successfully",
-      user,
       success: true,
-     });
+      user: user
+  });
+
   }
   catch(error){
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       message: "Server Error Updating Profile",
       success: false,
-    })
+    });
     
+
   }
 }
-
