@@ -201,18 +201,19 @@ export const updateProfile = async (req, res) => {
   try{
     const { fullname, email, phoneNumber, bio, skills } = req.body;
     const file = req.file;
-    if(!fullname || !email || !phoneNumber || !bio || !skills){
-      return res.status(404).json({
-        message : "Missing required fields",
-        success : false,
-      });
-    }
+    // if(!fullname || !email || !phoneNumber || !bio || !skills){
+    //   return res.status(404).json({
+    //     message : "Missing required fields",
+    //     success : false,
+    //   });
+    // }
 
 
     //cloudary upload
-
-
-    const skrillArray = skills.split(',');
+    let skillsArray;
+    if(skills){
+      const skrillArray = skills.split(',');
+    }
     const userId = req.id; //middleware authentication
     let user = await User.findById(userId);
     if(!user){
@@ -222,12 +223,23 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    user.fullname = fullname;
-    user.email = email;
-    user.phoneNumber = phoneNumber;
-    user.bio = bio;
-    user.skills = skrillArray;
+    //update database profile
 
+    if(fullname){
+      user.fullname = fullname;
+    }
+    if(email){
+    user.email = email;
+    }
+    if(phoneNumber){
+    user.phoneNumber = phoneNumber;
+    }
+    if(bio){
+    user.profile.bio = bio;
+    }
+    if(skills){
+    user.profile.skills = skrillArray;
+    }
     //resume
      
     await user.save();

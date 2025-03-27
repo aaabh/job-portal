@@ -4,3 +4,11 @@
 
 mongodb+srv://nimebi4710:soHfMTUYzjpwhXsx@cluster0.zr7kf.mongodb.net/
 mongodb+srv://nimebi4710:<db_password>@cluster0.zr7kf.mongodb.net/
+
+
+
+mongodb28
+3uijCKuoEpz05JML
+
+
+mongodb+srv://mongodb28:3uijCKuoEpz05JML@cluster0.q9etj.mongodb.net/
