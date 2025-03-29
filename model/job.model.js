@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const jobSchema = new  mongoose.Scheme({
+const jobSchema = new mongoose.Schema({
 
   
   title:{
@@ -10,20 +10,26 @@ const jobSchema = new  mongoose.Scheme({
   type: String,
   required: true
 },
-requirements:{
+requirements:[
+  {
   type: String,
   required: true,
-  },
+  }
+],
   location:{
     type: String,
     required: true
   },
   salary:{
-    type: Number,
+    type: String,
     required: true
   },
   jobType:{
     type: String,
+    required: true
+  },
+  experienceLevel:{
+    type: Number,
     required: true
   },
   company:{
